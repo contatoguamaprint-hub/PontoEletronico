@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Ponto</title>
+
+    <!-- PWA meta tags -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#3498db" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Ponto" />
+    <!-- Ícone para iOS (recomendado 180x180, mas 192x192 também serve) -->
+    <link rel="apple-touch-icon" href="icon-192x192.png" />
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #f0f4f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+        .logo { font-size: 3rem; margin-bottom: 1rem; }
+        h1 { color: #2c3e50; margin-bottom: 0.5rem; font-size: 1.8rem; }
+        p { color: #7f8c8d; margin-bottom: 1.5rem; }
+        .loader {
+            border: 4px solid #ecf0f1;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+        }
+        .btn:hover { background: #2980b9; }
+        .btn-secondary { background: #95a5a6; }
+        .btn-secondary:hover { background: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+<img src="icon-96x96.png" />
+</div>
+        <h1>Ponto Eletrônico</h1>
+        <p>Redirecionando para o registo de ponto...</p>
+        <div class="loader"></div>
+        <p style="font-size: 0.9rem;">
+            Se o redirecionamento não acontecer,<br>escolha uma das opções abaixo.
+        </p>
+        <a class="btn" href="http://192.168.1.9:8080">Acessar Ponto</a>
+        <button class="btn btn-secondary" onclick="window.open('http://192.168.1.9:8080', '_blank')">
+            Abrir em nova janela
+        </button>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "http://192.168.1.9:8080";
+        }, 2000);
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                    console.log('Service Worker registado:', reg.scope);
+                }, function(err) {
+                    console.log('Erro:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
