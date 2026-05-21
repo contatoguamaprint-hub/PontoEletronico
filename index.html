@@ -1,104 +1,332 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistema de Ponto</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Serviços</title>
 
-    <!-- PWA meta tags -->
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#3498db" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Ponto" />
-    <!-- Ícone para iOS (recomendado 180x180, mas 192x192 também serve) -->
-    <link rel="apple-touch-icon" href="icon-192x192.png" />
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Portal">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
 
     <style>
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-secondary: #8b949e;
+            --primary: #58a6ff;
+            --primary-hover: #79c0ff;
+            --success: #3fb950;
+            --error: #f85149;
+            --warning: #d2991d;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #f0f4f8;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #f0f6fc;
+        }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .services {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .service-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(88,166,255,0.2);
+            background: #1c2129;
+        }
+        .service-btn:active {
+            transform: scale(0.99);
+        }
+
+        .service-icon {
+            font-size: 2.2rem;
+            width: 3rem;
             text-align: center;
         }
-        .container {
-            background: white;
-            padding: 3rem 2rem;
+        .service-info {
+            flex: 1;
+        }
+        .service-info strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+        .service-info span {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .arrow {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Botões múltiplos (prioritários) */
+        .ip-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        .ip-btn {
+            background: #21262d;
+            border: 1px solid var(--border);
+            color: var(--primary);
+            padding: 0.5rem 0.9rem;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 90%;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
-        .logo { font-size: 3rem; margin-bottom: 1rem; }
-        h1 { color: #2c3e50; margin-bottom: 0.5rem; font-size: 1.8rem; }
-        p { color: #7f8c8d; margin-bottom: 1.5rem; }
-        .loader {
-            border: 4px solid #ecf0f1;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1.5rem auto;
+        .ip-btn:hover {
+            background: #30363d;
+            border-color: var(--primary);
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        /* Seção expansível */
+        .expand-section {
+            border-top: 1px solid var(--border);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+        .hidden {
+            display: none;
+        }
+        .manual-try {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        .manual-try .current-ip {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #f0f6fc;
+            margin-bottom: 0.8rem;
         }
         .btn {
             display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 0.8rem 2rem;
+            padding: 0.7rem 1.8rem;
             border-radius: 30px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s;
             border: none;
+            font-weight: bold;
             cursor: pointer;
-            font-size: 1rem;
-            margin: 0.5rem;
+            font-size: 0.9rem;
+            transition: background 0.2s, opacity 0.2s;
+            text-decoration: none;
+            color: white;
         }
-        .btn:hover { background: #2980b9; }
-        .btn-secondary { background: #95a5a6; }
-        .btn-secondary:hover { background: #7f8c8d; }
+        .btn-primary {
+            background: var(--primary);
+            color: #0d1117;
+        }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover { background: #21262d; }
+        .btn-small {
+            padding: 0.4rem 1.2rem;
+            font-size: 0.8rem;
+        }
+
+        .warning-banner {
+            background: #1b1f23;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-radius: 0 8px 8px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-<img src="icon-96x96.png" />
-</div>
-        <h1>Ponto Eletrônico</h1>
-        <p>Redirecionando para o registo de ponto...</p>
-        <div class="loader"></div>
-        <p style="font-size: 0.9rem;">
-            Se o redirecionamento não acontecer,<br>escolha uma das opções abaixo.
-        </p>
-        <a class="btn" href="http://192.168.1.9:8080">Acessar Ponto</a>
-        <button class="btn btn-secondary" onclick="window.open('http://192.168.1.9:8080', '_blank')">
-            Abrir em nova janela
-        </button>
+        <div class="header">
+            <h1>🌐 Portal de Acesso</h1>
+            <p>Selecione o serviço desejado</p>
+        </div>
+
+        <div class="services">
+            <!-- Serviço: Ponto Eletrónico com 3 IPs prioritários + tentativa manual -->
+            <div class="service-btn" style="flex-direction: column; align-items: flex-start;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <div class="service-icon">🕒</div>
+                    <div class="service-info">
+                        <strong>Ponto Eletrônico</strong>
+                        <span>Registo de ponto</span>
+                    </div>
+                    <div class="arrow">→</div>
+                </div>
+                <div class="ip-buttons" id="priorityIPs">
+                    <button class="ip-btn" data-ip="8">192.168.1.8</button>
+                    <button class="ip-btn" data-ip="9">192.168.1.9</button>
+                    <button class="ip-btn" data-ip="10">192.168.1.10</button>
+                </div>
+                <div class="expand-section">
+                    <button class="btn btn-outline btn-small" id="toggleManual" style="width:100%;">
+                        ⚙️ Nenhum funcionou? Tentar outros IPs manualmente
+                    </button>
+                    <div id="manualSection" class="manual-try hidden">
+                        <div class="current-ip" id="displayIP">192.168.1.1</div>
+                        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:0.8rem;">
+                            Clique em "Tentar este IP" para abrir o endereço.
+                        </p>
+                        <div style="display:flex; gap:0.5rem; justify-content:center;">
+                            <button class="btn btn-primary btn-small" id="btnTryIP">Tentar este IP</button>
+                            <button class="btn btn-outline btn-small" id="btnReset">Reiniciar</button>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.5rem;" id="statusMsg">
+                            IPs de 192.168.1.1 até 192.168.1.20
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- Chamado de Suporte -->
+            <a class="service-btn" href="https://forms.office.com/..." target="_blank" id="btnSuporte">
+                <div class="service-icon">🔧</div>
+                <div class="service-info">
+                    <strong>Chamado de Suporte</strong>
+                    <span>Abrir um ticket de ajuda</span>
+                </div>
+                <div class="arrow">→</div>
+            </a>
+        </div>
     </div>
 
     <script>
-        setTimeout(function() {
-            window.location.href = "http://192.168.1.9:8080";
-        }, 2000);
+        (function() {
+            // ---------- CONFIGURAÇÕES ----------
+            const PORT = 8080;
+            const BASE_IP = '192.168.1';
+            const START = 1;
+            const END = 20;
+            const SUPORTE_URL = 'https://forms.office.com/...'; // coloque o link real
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                    console.log('Service Worker registado:', reg.scope);
-                }, function(err) {
-                    console.log('Erro:', err);
+            // Atualiza link do suporte
+            document.getElementById('btnSuporte').href = SUPORTE_URL;
+
+            // Lida com os botões prioritários
+            document.querySelectorAll('#priorityIPs .ip-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const ipSuffix = e.currentTarget.getAttribute('data-ip');
+                    const url = `http://${BASE_IP}.${ipSuffix}:${PORT}`;
+                    window.open(url, '_blank');
                 });
             });
-        }
+
+            // Seção de tentativa manual sequencial
+            const manualSection = document.getElementById('manualSection');
+            const toggleBtn = document.getElementById('toggleManual');
+            const displayIP = document.getElementById('displayIP');
+            const btnTryIP = document.getElementById('btnTryIP');
+            const btnReset = document.getElementById('btnReset');
+            const statusMsg = document.getElementById('statusMsg');
+
+            let currentIP = START;
+
+            function updateDisplay() {
+                displayIP.textContent = `${BASE_IP}.${currentIP}`;
+            }
+
+            function tryCurrentIP() {
+                const url = `http://${BASE_IP}.${currentIP}:${PORT}`;
+                window.open(url, '_blank');
+                // Avança para o próximo IP (circular)
+                currentIP = currentIP >= END ? START : currentIP + 1;
+                updateDisplay();
+                if (currentIP === START) {
+                    statusMsg.textContent = 'Todos os IPs foram tentados. Reiniciando...';
+                } else {
+                    statusMsg.textContent = `Próximo IP: ${BASE_IP}.${currentIP}`;
+                }
+            }
+
+            function resetManual() {
+                currentIP = START;
+                updateDisplay();
+                statusMsg.textContent = 'IPs de 192.168.1.1 até 192.168.1.20';
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                manualSection.classList.toggle('hidden');
+                if (!manualSection.classList.contains('hidden')) {
+                    updateDisplay();
+                    statusMsg.textContent = 'IPs de 192.168.1.1 até 192.168.1.20';
+                }
+            });
+
+            btnTryIP.addEventListener('click', tryCurrentIP);
+            btnReset.addEventListener('click', resetManual);
+
+            // Atualiza o display inicial
+            updateDisplay();
+
+            // Regista Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js');
+                });
+            }
+        })();
     </script>
 </body>
 </html>

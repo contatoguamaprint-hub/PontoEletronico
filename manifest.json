@@ -1,12 +1,10 @@
 {
-    "name": "Ponto Eletrônico",
-    "short_name": "Ponto Eletrônico",
-    "description": "Acesso rápido ao sistema de ponto",
+    "name": "Portal de Serviços",
+    "short_name": "Portal",
     "start_url": "/",
-    "scope": "/",
     "display": "standalone",
-    "background_color": "#f0f4f8",
-    "theme_color": "#3498db",
+    "background_color": "#0d1117",
+    "theme_color": "#0d1117",
     "icons": [
         {
             "src": "icon-192x192.png",
@@ -18,12 +16,6 @@
             "src": "icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icon.svg",
-            "sizes": "any",
-            "type": "image/svg+xml",
             "purpose": "any maskable"
         }
     ]
