@@ -1,6 +1,6 @@
 {
-    "name": "Portal de Serviços",
-    "short_name": "Portal",
+    "name": "Portal de Serviços Guamaprint",
+    "short_name": "Portal Guamaprint",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#0d1117",
